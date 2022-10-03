@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {  useState } from "react";
 
 function QuestionForm(props) {
   const [formData, setFormData] = useState({
@@ -9,7 +9,8 @@ function QuestionForm(props) {
     answer4: "",
     correctIndex: 0,
   });
-
+  const {prompt, answer1, answer2, answer3, answer4, correctIndex} = formData;
+  
   function handleChange(event) {
     setFormData({
       ...formData,
@@ -19,7 +20,16 @@ function QuestionForm(props) {
 
   function handleSubmit(event) {
     event.preventDefault();
-    console.log(formData);
+    fetch(props.url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prompt: prompt,
+        answers: [answer1, answer2, answer3, answer4],
+        correctIndex: correctIndex
+      })
+    }).catch(err => console.log(err));
+    props.updateQuestions(formData);
   }
 
   return (
